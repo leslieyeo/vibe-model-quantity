@@ -70,7 +70,7 @@ export function OverviewView({ range, onOpenSession }: ViewProps) {
   const sessionsDelta = prev.count > 0 ? (cur.count - prev.count) / prev.count : 0;
 
   const cacheRate = totalTokens > 0 ? cur.tokens.cacheR / totalTokens : 0;
-  const avgPerSession = cur.count > 0 ? cur.cost / cur.count : 0;
+  const topModelMeta = topModels.length > 0 ? MODELS.find(m => m.id === topModels[0].key) : null;
 
   const rangeLabel = formatRangeLabel(start, end);
   const rangeProse = t(`rangeProse.${range}`);
@@ -142,10 +142,33 @@ export function OverviewView({ range, onOpenSession }: ViewProps) {
           <div className="sub"><span>{fmtCompact(cur.tokens.cacheR)} cached</span></div>
         </div>
         <div className="kpi">
-          <div className="label">Avg session</div>
-          <div className="value">{fmtUSD(avgPerSession)}</div>
-          <div className="sub"><span>{fmtCompact(cur.count > 0 ? totalTokens / cur.count : 0)} tok</span></div>
+          <div className="label">Top model</div>
+          <div className="value" style={{ fontSize: "calc(22px * var(--density))" }}>
+            {topModelMeta?.display || "—"}
+          </div>
+          <div className="sub">
+            <span>{fmtUSD(topModels[0]?.cost ?? 0, { decimals: 0 })}</span>
+            <span>·</span>
+            <span>{fmtPct((topModels[0]?.cost ?? 0) / Math.max(cur.cost, 0.0001), 0)} of spend</span>
+          </div>
         </div>
+      </div>
+
+      {/* Cost methodology disclosure */}
+      <div style={{
+        marginBottom: "var(--gap-6)",
+        padding: "var(--gap-3) var(--gap-4)",
+        border: "1px solid var(--rule)",
+        borderLeft: "3px solid var(--accent)",
+        fontFamily: "var(--font-mono)",
+        fontSize: 11,
+        lineHeight: 1.6,
+        color: "var(--ink-2)",
+      }}>
+        <span style={{ color: "var(--accent)", textTransform: "uppercase", letterSpacing: "0.14em", marginRight: 8 }}>
+          {t("overview.costNoteLabel")}
+        </span>
+        {t("overview.costNoteBody")}
       </div>
 
       <section className="block" style={{ marginBottom: "var(--gap-7)" }}>

@@ -32,6 +32,8 @@
     "cacheTipLow": "Cache-read 用量偏低,加点 prompt 缓存还能再省。",
     "dailyAverage": "日均",
     "vsPrior": "vs 上期",
+    "costNoteLabel": "钱是怎么算的",
+    "costNoteBody": "$ 数额 = 把你的 token 量按 retail API 价格折算的结果(例如 Opus 4.7: $15/M 输入、$1.50/M 缓存读、$75/M 输出)。如果你订了 Claude / ChatGPT 月度套餐(Max / Pro / Team),你付的是固定月费,这里的数字跟你账单无关。把它当作「如果按 API 零售走会值多少钱」,不是「实际花了多少」。",
     "blockSpendByClient": "按 <em>客户端</em> 每日花费",
     "blockTopModels": "<em>Top</em> 模型",
     "blockByCost": "按成本排序",

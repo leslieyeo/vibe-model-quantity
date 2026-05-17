@@ -2,6 +2,13 @@
 
 All notable changes to this project documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.2.0] - 2026-05-17
+
+### Changed
+
+- **Cost methodology disclosure.** Added a clearly-labelled note under the Overview headline: dollar values are *retail API prices applied to token counts*, not money you actually paid. Most users are on flat-rate Claude/ChatGPT subscriptions where these numbers are off by 50-100×. Treating $ as "shadow API value" is now explicit.
+- **Replaced "Avg session" KPI with "Top model".** "$ per session" was a confusing ratio. "Top model" surfaces a concrete decision-useful fact ("Opus 4.7 took 70% of your spend") — name + dollar amount + share-of-total.
+
 ## [0.1.1.0] - 2026-05-17
 
 ### Fixed
