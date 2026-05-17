@@ -203,4 +203,6 @@ bash /tmp/vmq-cmp.sh 2026-05-17
 
 ## License
 
-Private (目前个人项目)。
+[MIT](LICENSE) — fork it, ship it, change it. Just keep the copyright notice.
+
+如果对你有用,star 一下让作者知道。Issue / PR 都欢迎。

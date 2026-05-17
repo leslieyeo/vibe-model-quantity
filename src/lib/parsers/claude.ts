@@ -183,7 +183,8 @@ function num(v: unknown): number {
 }
 
 function decodeCwd(dirName: string): string {
-  // ~/.claude/projects/-Users-dooby-Dev → /Users/dooby/Dev
+  // Claude Code encodes cwd by replacing `/` with `-`. Reverse the swap as
+  // a best-effort fallback when the JSONL itself doesn't carry an explicit cwd.
   return dirName.replace(/^-/, "/").replace(/-/g, "/");
 }
 
