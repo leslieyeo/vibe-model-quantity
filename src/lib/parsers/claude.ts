@@ -6,6 +6,9 @@ import { costFromTokens } from "./pricing";
 import type { ParseResult } from "./types";
 
 const PROJECTS_DIR = path.join(os.homedir(), ".claude", "projects");
+// Skip absurdly large session files — reading 500MB into a single string
+// would OOM the API route. Real Claude Code sessions top out around 30MB.
+const MAX_FILE_BYTES = 100 * 1024 * 1024;
 
 type DayAgg = {
   firstTs: number;
@@ -50,6 +53,8 @@ export async function parseClaudeCode(): Promise<ParseResult> {
       filesScanned++;
       const file = path.join(dir, entry);
       try {
+        const stat = await fs.stat(file);
+        if (stat.size > MAX_FILE_BYTES) continue;
         const text = await fs.readFile(file, "utf8");
         const agg = aggregateSessionFile(text);
         if (!agg) continue;

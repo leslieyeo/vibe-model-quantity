@@ -7,6 +7,8 @@ import type { ParseResult } from "./types";
 
 const SESSIONS_ROOT = path.join(os.homedir(), ".codex", "sessions");
 const ARCHIVED = path.join(os.homedir(), ".codex", "archived_sessions");
+// Codex rollouts can hit 100MB+ on long sessions. Cap to avoid OOM.
+const MAX_FILE_BYTES = 150 * 1024 * 1024;
 
 export async function parseCodex(): Promise<ParseResult> {
   let installed = false;
@@ -28,6 +30,8 @@ export async function parseCodex(): Promise<ParseResult> {
     if (!file.endsWith(".jsonl")) continue;
     filesScanned++;
     try {
+      const stat = await fs.stat(file);
+      if (stat.size > MAX_FILE_BYTES) continue;
       const text = await fs.readFile(file, "utf8");
       const s = aggregateCodexFile(text, file);
       if (!s) continue;

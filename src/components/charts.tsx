@@ -317,17 +317,24 @@ export function Donut({ segments, size = 160, thickness = 18 }: {
   const total = segments.reduce((a, s) => a + s.value, 0) || 1;
   const r = size / 2 - thickness / 2 - 1;
   const cx = size / 2, cy = size / 2;
-  let a0 = -Math.PI / 2;
+  // Pre-compute arc endpoints immutably via running prefix-sum (avoids
+  // render-time `let` reassignment, which React 19 flags).
+  const arcs = segments.reduce<{ s: DonutSegment; a0: number; a1: number; large: 0 | 1 }[]>(
+    (acc, s) => {
+      const start = acc.length === 0 ? -Math.PI / 2 : acc[acc.length - 1].a1;
+      const frac = s.value / total;
+      const end = start + frac * 2 * Math.PI;
+      acc.push({ s, a0: start, a1: end, large: frac > 0.5 ? 1 : 0 });
+      return acc;
+    },
+    [],
+  );
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {segments.map(s => {
-        const frac = s.value / total;
-        const a1 = a0 + frac * 2 * Math.PI;
+      {arcs.map(({ s, a0, a1, large }) => {
         const x0 = cx + r * Math.cos(a0), y0 = cy + r * Math.sin(a0);
         const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
-        const large = frac > 0.5 ? 1 : 0;
         const d = `M ${x0} ${y0} A ${r} ${r} 0 ${large} 1 ${x1} ${y1}`;
-        a0 = a1;
         return <path key={s.id} d={d} fill="none" stroke={s.color} strokeWidth={thickness} />;
       })}
     </svg>

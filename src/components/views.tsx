@@ -6,7 +6,7 @@ import {
   CLIENTS, MODELS, PROJECTS, NOW,
   buildDailySeriesByKey, dayBuckets, dayKey, dayLabel,
   formatRangeLabel, previousWindow, rangeWindow, sessionsIn, sumTokens, topAggregates,
-  type Range, type Session,
+  type DailySeries, type Range, type Session,
 } from "@/lib/data";
 import { fmtUSD, fmtCompact, fmtPct } from "@/lib/format";
 import {
@@ -610,15 +610,17 @@ export function BudgetView({ budget, setBudget }: { budget: number; setBudget: (
   const monthFrac = dom / daysInMonth;
 
   const cumDays = dayBuckets(new Date(today.getFullYear(), today.getMonth(), 1), today);
-  let cum = 0;
-  const cumSeries = cumDays.map((d, idx) => {
-    cum += sessions.filter(s => dayKey(s.start) === d.key).reduce((a, s) => a + s.cost, 0);
-    return {
+  // Build cumulative series via reduce — running total without render-time let.
+  const cumSeries = cumDays.reduce<DailySeries[]>((acc, d, idx) => {
+    const prev = acc.length === 0 ? 0 : acc[acc.length - 1].totals.cum;
+    const dayTotal = sessions.filter(s => dayKey(s.start) === d.key).reduce((a, s) => a + s.cost, 0);
+    acc.push({
       ...d,
       label: dayLabel(d.date, cumDays.length),
-      totals: { cum, budgetLine: (budget / daysInMonth) * (idx + 1) },
-    };
-  });
+      totals: { cum: prev + dayTotal, budgetLine: (budget / daysInMonth) * (idx + 1) },
+    });
+    return acc;
+  }, []);
 
   return (
     <>

@@ -21,13 +21,8 @@ export function SessionDrawer({ session, onClose }: { session: Session | null; o
   const max = Math.max(...tokens.map(t => t.v), 1);
   const total = tokens.reduce((a, t) => a + t.v, 0);
 
-  const transcript = [
-    { who: "you", text: `Let's start on ${session.title}. The migration script is choking on the index rebuild.` },
-    { who: "asst", text: "Looking at `migrations/2026_03_08_pgvector.sql`. The CREATE INDEX is running outside the transaction; pgvector's HNSW build holds a long lock." },
-    { who: "you", text: "Right. Can we move it to CONCURRENTLY? What does that do to the deploy?" },
-    { who: "asst", text: "CONCURRENTLY drops the table-level lock but doubles the build time. For a 4M-row table that's ≈ 6–8 minutes; the deploy window allows it." },
-    { who: "you", text: "Let's do it. Also add a sanity check at the end that the index actually got created." },
-  ];
+  // Transcript ingestion is a v1.1 feature — real session content stays on disk
+  // and is not surfaced in the drawer yet. Show a single placeholder line.
 
   return (
     <>
@@ -78,16 +73,8 @@ export function SessionDrawer({ session, onClose }: { session: Session | null; o
 
           <div>
             <div className="eyebrow" style={{ marginBottom: 12 }}>Transcript preview</div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-              {transcript.map((m2, i) => (
-                <div key={i} className={`tx-bubble ${m2.who === "asst" ? "assistant" : ""}`}>
-                  <span className="who">{m2.who === "asst" ? "Assistant" : "You"}</span>
-                  <span>{m2.text}</span>
-                </div>
-              ))}
-              <div className="mono" style={{ fontSize: 10, color: "var(--ink-4)", textAlign: "center", padding: "8px 0", letterSpacing: "0.14em" }}>
-                — {session.messages - transcript.length} more messages —
-              </div>
+            <div className="mono" style={{ fontSize: 11, color: "var(--ink-3)", padding: "12px 0", letterSpacing: "0.04em", lineHeight: 1.6 }}>
+              Transcript ingestion ships in v1.1 — {session.messages} messages live on disk at the session file.
             </div>
           </div>
         </div>

@@ -6,7 +6,20 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const result = await ingestAll();
+  let result;
+  try {
+    result = await ingestAll();
+  } catch (err) {
+    return NextResponse.json(
+      {
+        sessions: [],
+        models: [],
+        projects: [],
+        diagnostics: [{ client: "ingest-error", installed: false, filesScanned: 0, sessions: 0, notes: [String(err)] }],
+      },
+      { status: 500 },
+    );
+  }
 
   // Build model + project rosters from observed sessions.
   const modelSet = new Map<string, { id: string; display: string; vendor: string; prices: ReturnType<typeof resolveModel>["prices"] }>();

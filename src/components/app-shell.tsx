@@ -26,14 +26,15 @@ const ACCENT_SWATCHES: { id: Accent; color: string }[] = [
   { id: "crimson", color: "oklch(0.50 0.16 20)"  },
 ];
 
-export function AppShell() {
-  const [locale, setLocale] = useState<Locale>("zh");
+function readSavedLocale(): Locale {
+  if (typeof window === "undefined") return "zh";
+  const saved = window.localStorage.getItem("vmq.locale");
+  return saved === "en" || saved === "zh" ? saved : "zh";
+}
 
-  // Restore locale from localStorage after mount (avoids SSR mismatch)
-  useEffect(() => {
-    const saved = typeof window !== "undefined" ? localStorage.getItem("vmq.locale") : null;
-    if (saved === "en" || saved === "zh") setLocale(saved);
-  }, []);
+export function AppShell() {
+  // Lazy initialiser reads localStorage during hydration without a setState-in-effect.
+  const [locale, setLocale] = useState<Locale>(readSavedLocale);
 
   useEffect(() => {
     if (typeof window !== "undefined") localStorage.setItem("vmq.locale", locale);
@@ -67,25 +68,22 @@ function AppContent({ locale, setLocale }: { locale: Locale; setLocale: (l: Loca
   const [grain, setGrain] = useState(true);
   const [tweaksOpen, setTweaksOpen] = useState(false);
 
-  const [loadingState, setLoadingState] = useState<"idle" | "loading" | "ready" | "error">("loading");
-  const [diagnostics, setDiagnostics] = useState<Diagnostic[]>([]);
+  // forceRender exists because views read from module-level mutable SESSIONS;
+  // we bump a counter after API hydration to trigger a re-render through React.
   const [, forceRender] = useState(0);
 
-  const [optIn, setOptIn] = useState(false);
-  const [nickname, setNickname] = useState("");
+  const [optIn, setOptIn] = useState<boolean>(() =>
+    typeof window !== "undefined" && window.localStorage.getItem("vmq.lb.optIn") === "1",
+  );
+  const [nickname, setNickname] = useState<string>(() =>
+    typeof window !== "undefined" ? (window.localStorage.getItem("vmq.lb.nickname") ?? "") : "",
+  );
 
-  useEffect(() => {
-    const o = typeof window !== "undefined" ? localStorage.getItem("vmq.lb.optIn") : null;
-    const n = typeof window !== "undefined" ? localStorage.getItem("vmq.lb.nickname") : null;
-    if (o === "1") setOptIn(true);
-    if (n) setNickname(n);
-  }, []);
   useEffect(() => { if (typeof window !== "undefined") localStorage.setItem("vmq.lb.optIn", optIn ? "1" : "0"); }, [optIn]);
   useEffect(() => { if (typeof window !== "undefined") localStorage.setItem("vmq.lb.nickname", nickname); }, [nickname]);
 
   useEffect(() => {
     let alive = true;
-    setLoadingState("loading");
     fetch("/api/sessions")
       .then(r => r.json())
       .then((data: { sessions: Session[]; models: { id: string; display: string; vendor: Vendor; prices: { in: number; cacheR: number; cacheW: number; out: number; reason: number } }[]; projects: { id: string; name: string; path: string }[]; diagnostics: Diagnostic[] }) => {
@@ -93,11 +91,9 @@ function AppContent({ locale, setLocale }: { locale: Locale; setLocale: (l: Loca
         setSessions(data.sessions);
         for (const m of data.models) addModel(m);
         for (const p of data.projects) addProject(p);
-        setDiagnostics(data.diagnostics);
-        setLoadingState("ready");
         forceRender(x => x + 1);
       })
-      .catch(() => alive && setLoadingState("error"));
+      .catch(() => { /* surface in diagnostics later; leaves SESSIONS empty */ });
     return () => { alive = false; };
   }, []);
 
@@ -190,8 +186,8 @@ function AppContent({ locale, setLocale }: { locale: Locale; setLocale: (l: Loca
           </div>
         ))}
         <div className="foot">
-          <div>~/.vibemodel/logs</div>
-          <div style={{ color: "var(--ink-4)" }}>v0.4.2 · localhost:7414</div>
+          <div>~/.claude · ~/.codex · ~/.vibeusage</div>
+          <div style={{ color: "var(--ink-4)" }}>v0.1.0 · local-only</div>
         </div>
       </aside>
 
