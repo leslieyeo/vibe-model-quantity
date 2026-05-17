@@ -99,8 +99,14 @@ function aggregateCodexFile(text: string, filePath: string): Session | null {
       const info = payload.info as Record<string, unknown> | undefined;
       const total = (info?.total_token_usage ?? null) as Record<string, unknown> | null;
       if (total) {
-        totals.in     = num(total.input_tokens);
-        totals.cacheR = num(total.cached_input_tokens);
+        // OpenAI convention: total.input_tokens INCLUDES cached_input_tokens.
+        // We store disjoint values (Anthropic convention) so costFromTokens —
+        // which sums in × in_price + cacheR × cacheR_price — doesn't double-bill
+        // the cached portion at full input price.
+        const inputRaw = num(total.input_tokens);
+        const cached = num(total.cached_input_tokens);
+        totals.in     = Math.max(0, inputRaw - cached);
+        totals.cacheR = cached;
         totals.cacheW = 0;
         totals.out    = num(total.output_tokens);
         totals.reason = num(total.reasoning_output_tokens);

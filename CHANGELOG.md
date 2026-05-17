@@ -2,6 +2,21 @@
 
 All notable changes to this project documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.1.0] - 2026-05-17
+
+### Fixed
+
+- **Codex cost double-counted cached tokens.** OpenAI's `token_count.info.total_token_usage.input_tokens` already includes `cached_input_tokens`; we were billing the cached portion at both full input price and cache-read price. Codex CLI totals were ~58% too high (e.g. $1,425 → $599 for MTD on a real ledger). Fix: subtract `cached_input_tokens` from `input_tokens` in the parser so cost math stays additive.
+- **Hermes cost same bug for OpenAI-compatible providers** (Qwen via DashScope, MiMo via Xiaomi). Anthropic provider records remain disjoint; other providers now subtract cached input.
+
+### Changed
+
+- **Dropped redundant "Burn rate" KPI.** It was identical to "Daily average" in the head-stat. Replaced with **Avg session** ($ per session) — actionable signal that scales naturally as you switch ranges.
+- **Cache hit subtitle clarity.** Was "saved ≈ $X" (which felt static because it grew slowly across ranges and the framing was abstract). Now shows "X cached" — absolute token count, which moves visibly with range.
+- **Tokens subtitle.** Was "X out". Now shows both "in X · out X" so you can see the input/output split at a glance.
+- **Dropped "$X / work-hr" sub-metric** — derived from an 8h/day assumption that wasn't surfaced. Useless without context.
+- **i18n** — "Burn rate / 燃烧速率" → "Daily spend / 日均花费" (Budget view head-stat).
+
 ## [0.1.0.0] - 2026-05-17
 
 First public ship. Local AI coding token usage dashboard with real-data ingestion from Claude Code, Codex, and Hermes.

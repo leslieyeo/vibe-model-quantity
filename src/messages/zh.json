@@ -77,7 +77,7 @@
     "headline": "本月已花 {spent} / <em>{cap}</em>。",
     "summaryOver": "按当前速度月底将达 {projected}——<neg>超预算 {over}。</neg>",
     "summaryUnder": "按当前速度月底将达 {projected}——<pos>预算内还剩 {under}。</pos>",
-    "burnRate": "燃烧速率",
+    "burnRate": "日均花费",
     "perDayMonth": "每日 · 第 {dom}/{daysInMonth} 天",
     "blockMonthly": "<em>月度</em> 预算",
     "spentLabel": "已花 {pct}",

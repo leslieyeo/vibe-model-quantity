@@ -80,9 +80,17 @@ export async function parseHermes(): Promise<ParseResult> {
     if (ts > g.lastTs) g.lastTs = ts;
     const model = String(evt.model || "");
     if (model) g.modelCounts.set(model, (g.modelCounts.get(model) || 0) + 1);
-    g.tokens.in     += num(evt.input_tokens);
+    // Anthropic returns input_tokens disjoint from cache_read_tokens; OpenAI
+    // (and OpenAI-compatible APIs like Qwen via DashScope, Xiaomi MiMo)
+    // returns input_tokens INCLUDING cached. Normalize to disjoint so
+    // costFromTokens doesn't double-bill the cached portion.
+    const provider = String(evt.provider || "").toLowerCase();
+    const inputRaw = num(evt.input_tokens);
+    const cacheR = num(evt.cache_read_tokens);
+    const isAnthropic = provider === "anthropic";
+    g.tokens.in     += isAnthropic ? inputRaw : Math.max(0, inputRaw - cacheR);
     g.tokens.out    += num(evt.output_tokens);
-    g.tokens.cacheR += num(evt.cache_read_tokens);
+    g.tokens.cacheR += cacheR;
     g.tokens.cacheW += num(evt.cache_write_tokens);
     g.tokens.reason += num(evt.reasoning_tokens);
     g.apiCalls += num(evt.api_call_count) || 1;

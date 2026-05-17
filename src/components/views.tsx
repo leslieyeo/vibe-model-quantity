@@ -69,13 +69,8 @@ export function OverviewView({ range, onOpenSession }: ViewProps) {
   const costDelta = prev.cost > 0 ? (cur.cost - prev.cost) / prev.cost : 0;
   const sessionsDelta = prev.count > 0 ? (cur.count - prev.count) / prev.count : 0;
 
-  let savedCache = 0;
-  for (const s of sessions) {
-    const m = MODELS.find(x => x.id === s.model);
-    if (!m) continue;
-    savedCache += (s.tokens.cacheR / 1_000_000) * (m.prices.in - m.prices.cacheR);
-  }
   const cacheRate = totalTokens > 0 ? cur.tokens.cacheR / totalTokens : 0;
+  const avgPerSession = cur.count > 0 ? cur.cost / cur.count : 0;
 
   const rangeLabel = formatRangeLabel(start, end);
   const rangeProse = t(`rangeProse.${range}`);
@@ -127,7 +122,11 @@ export function OverviewView({ range, onOpenSession }: ViewProps) {
         <div className="kpi">
           <div className="label">Tokens</div>
           <div className="value">{fmtCompact(totalTokens)}</div>
-          <div className="sub"><span>{fmtCompact(cur.tokens.out)} out</span></div>
+          <div className="sub">
+            <span>in {fmtCompact(cur.tokens.in)}</span>
+            <span>·</span>
+            <span>out {fmtCompact(cur.tokens.out)}</span>
+          </div>
         </div>
         <div className="kpi">
           <div className="label">Sessions</div>
@@ -140,12 +139,12 @@ export function OverviewView({ range, onOpenSession }: ViewProps) {
         <div className="kpi">
           <div className="label">Cache hit</div>
           <div className="value">{fmtPct(cacheRate, 0)}</div>
-          <div className="sub"><span>saved ≈ {fmtUSD(savedCache, { decimals: 0 })}</span></div>
+          <div className="sub"><span>{fmtCompact(cur.tokens.cacheR)} cached</span></div>
         </div>
         <div className="kpi">
-          <div className="label">Burn rate</div>
-          <div className="value">{fmtUSD(avgDay, { decimals: 0 })}<span className="unit">/day</span></div>
-          <div className="sub"><span>{fmtUSD(avgDay / 8, { decimals: 2 })} / work-hr</span></div>
+          <div className="label">Avg session</div>
+          <div className="value">{fmtUSD(avgPerSession)}</div>
+          <div className="sub"><span>{fmtCompact(cur.count > 0 ? totalTokens / cur.count : 0)} tok</span></div>
         </div>
       </div>
 

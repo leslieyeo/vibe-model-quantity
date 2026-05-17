@@ -77,7 +77,7 @@
     "headline": "{spent} of <em>{cap}</em><br></br>this month.",
     "summaryOver": "On pace for {projected} by month-end — <neg>{over} over budget.</neg>",
     "summaryUnder": "On pace for {projected} by month-end — <pos>{under} under budget.</pos>",
-    "burnRate": "Burn rate",
+    "burnRate": "Daily spend",
     "perDayMonth": "per day · day {dom}/{daysInMonth}",
     "blockMonthly": "Monthly <em>budget</em>",
     "spentLabel": "{pct} spent",
