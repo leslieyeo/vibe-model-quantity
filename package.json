@@ -1,6 +1,14 @@
 {
   "name": "vibemq",
   "version": "0.1.4.0",
+  "license": "MIT",
+  "description": "Local AI coding token usage dashboard — Claude Code / Codex / Hermes with hand-verified math and editorial × terminal aesthetic.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leslieyeo/vibe-model-quantity.git"
+  },
+  "homepage": "https://github.com/leslieyeo/vibe-model-quantity",
+  "bugs": "https://github.com/leslieyeo/vibe-model-quantity/issues",
   "private": true,
   "scripts": {
     "dev": "next dev",
