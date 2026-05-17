@@ -108,6 +108,10 @@ export async function parseHermes(): Promise<ParseResult> {
     const durationMin = Math.max(1, Math.round((g.lastTs - g.firstTs) / 60000));
     const platform = g.platform || "unknown";
 
+    // Make titles distinguishable: hermes session_ids look like
+    // "20260516_195349_9fbd0971" — keep the trailing hex for visual diversity.
+    const [sid] = key.split(":");
+    const shortId = sid.length > 8 ? sid.slice(-8) : sid;
     sessions.push({
       id: `hms:${key}`,
       start: new Date(g.firstTs).toISOString(),
@@ -115,7 +119,7 @@ export async function parseHermes(): Promise<ParseResult> {
       client: "hermes",
       model: bestModel,
       project: `hermes-${platform}`,
-      title: `hermes · ${platform}`,
+      title: `${platform} · ${shortId}`,
       tokens: g.tokens,
       cost,
       messages: g.apiCalls,

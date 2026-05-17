@@ -2,6 +2,16 @@
 
 All notable changes to this project documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.3.0] - 2026-05-17
+
+### Changed
+
+- **Hermes session titles include session_id suffix.** Was `hermes · discord` for every Discord session — same string repeated dozens of times in the Sessions list. Now `discord · 9fbd0971`, so each row is visually distinguishable at a glance.
+
+### Notes
+
+`/design-review` audit complete (see `~/.gstack/projects/leslieyeo-vibe-model-quantity/designs/`). Desktop verdict: clean App UI, no AI slop, Trunk Test 5/6, Litmus 7/7. Mobile responsiveness deferred to v1.x as a separate feature (logged in TODOS.md).
+
 ## [0.1.2.0] - 2026-05-17
 
 ### Changed

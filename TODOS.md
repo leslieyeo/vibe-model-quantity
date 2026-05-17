@@ -44,6 +44,14 @@ Organized by component, then priority (P0 = bug shipping, P4 = nice-to-have).
 
 ## ui
 
+- **Mobile layout (< 900px)**
+  **Priority:** P2
+  Globals.css has no responsive breakpoints. On 375px viewport: sidebar still 220px (eats 60% of width), `page-head h1` truncates ("$6,8...", "tok..."), KPI strip overflows, drawer's 560px width pushes off-screen. `/design-review` flagged this as HIGH but it's gated by use case — current tool is desktop-only by intent. If we ever want mobile, the fix is at least: `@media (max-width: 900px) { .app { grid-template-columns: 1fr; } .sidebar { display: none; } .topbar { grid-template-columns: 1fr; } }` plus a hamburger.
+
+- **Touch targets < 44px**
+  **Priority:** P3
+  Range tabs are 28px tall, sidebar nav items 31px tall. iOS HIG / Material guidelines want 44×44. Fine for trackpad, fails on phones.
+
 - **Live wall-clock in topbar**
   **Priority:** P3
   Topbar time renders once and never ticks. "Tailing logs" indicator implies live but the clock is frozen. `setInterval(1000)` + state.
