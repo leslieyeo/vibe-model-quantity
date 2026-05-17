@@ -870,6 +870,37 @@ section.block {
   display: flex; justify-content: space-between;
 }
 
+/* "at retail API rate" tag — clarifies $ semantics in headlines */
+.api-rate-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding: 2px 8px;
+  border: 1px solid var(--accent);
+  border-radius: var(--r);
+  margin-top: var(--gap-2);
+  white-space: nowrap;
+}
+.kpi .label .api-suffix {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-left: 6px;
+  text-transform: none;
+}
+.head-stat .api-suffix {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  margin-left: 6px;
+  text-transform: uppercase;
+}
+
 /* Buttons */
 .btn {
   background: transparent;

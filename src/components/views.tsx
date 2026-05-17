@@ -91,6 +91,7 @@ export function OverviewView({ range, onOpenSession }: ViewProps) {
               br: richBr,
             })}
           </h1>
+          <div className="api-rate-tag">{t("overview.atApiRate")}</div>
           <p className="summary">
             {t("overview.summary", {
               count: cur.count,
@@ -102,7 +103,7 @@ export function OverviewView({ range, onOpenSession }: ViewProps) {
           </p>
         </div>
         <div className="head-stat">
-          <div className="eyebrow">{t("overview.dailyAverage")}</div>
+          <div className="eyebrow">{t("overview.dailyAverage")} <span className="api-suffix">· API</span></div>
           <div className="num">{fmtUSD(avgDay, { decimals: 0 })}</div>
           <div className={`delta ${dayDelta < 0 ? "down" : ""}`}>
             {fmtPct(Math.abs(dayDelta))} {t("overview.vsPrior")}
@@ -112,7 +113,7 @@ export function OverviewView({ range, onOpenSession }: ViewProps) {
 
       <div className="kpi-row">
         <div className="kpi">
-          <div className="label">Spend</div>
+          <div className="label">Spend <span className="api-suffix">· API</span></div>
           <div className="value">{fmtUSD(cur.cost, { decimals: 0 })}</div>
           <div className="sub">
             <span className={`delta ${costDelta < 0 ? "down" : ""}`}>{fmtPct(Math.abs(costDelta))}</span>
@@ -313,7 +314,7 @@ export function ModelsView({ range }: ViewProps) {
         <div className="head-stat">
           <div className="eyebrow">{t("models.modelsTouched")}</div>
           <div className="num">{all.length}</div>
-          <div className="delta down">{t("models.totalSuffix", { amount: fmtUSD(total, { decimals: 0 }) })}</div>
+          <div className="delta down">{t("models.totalSuffix", { amount: fmtUSD(total, { decimals: 0 }) })} <span className="api-suffix">· API</span></div>
         </div>
       </header>
 
@@ -403,7 +404,7 @@ export function ClientsView({ range }: ViewProps) {
         <div className="head-stat">
           <div className="eyebrow">{t("clients.active")}</div>
           <div className="num">{agg.length}</div>
-          <div className="delta down">{t("models.totalSuffix", { amount: fmtUSD(total, { decimals: 0 }) })}</div>
+          <div className="delta down">{t("models.totalSuffix", { amount: fmtUSD(total, { decimals: 0 }) })} <span className="api-suffix">· API</span></div>
         </div>
       </header>
 
@@ -494,7 +495,7 @@ export function ProjectsView({ range }: ViewProps) {
         <div className="head-stat">
           <div className="eyebrow">{t("projects.touched")}</div>
           <div className="num">{agg.length}</div>
-          <div className="delta down">{t("models.totalSuffix", { amount: fmtUSD(total, { decimals: 0 }) })}</div>
+          <div className="delta down">{t("models.totalSuffix", { amount: fmtUSD(total, { decimals: 0 }) })} <span className="api-suffix">· API</span></div>
         </div>
       </header>
 
@@ -574,7 +575,7 @@ export function SessionsView({ range, onOpenSession }: ViewProps) {
         <div className="head-stat">
           <div className="eyebrow">{t("sessions.inRange")}</div>
           <div className="num">{filtered.length}</div>
-          <div className="delta down">{t("models.totalSuffix", { amount: fmtUSD(total, { decimals: 0 }) })}</div>
+          <div className="delta down">{t("models.totalSuffix", { amount: fmtUSD(total, { decimals: 0 }) })} <span className="api-suffix">· API</span></div>
         </div>
       </header>
 
@@ -660,6 +661,7 @@ export function BudgetView({ budget, setBudget }: { budget: number; setBudget: (
               br: richBr,
             })}
           </h1>
+          <div className="api-rate-tag">{t("overview.atApiRate")}</div>
           <p className="summary">
             {projected > budget
               ? t.rich("budget.summaryOver", {

@@ -32,6 +32,7 @@
     "cacheTipLow": "Cache-read volume is light; prompt caching could trim costs further.",
     "dailyAverage": "Daily average",
     "vsPrior": "vs prior",
+    "atApiRate": "at retail API rates",
     "costNoteLabel": "How $ is computed",
     "costNoteBody": "Dollar values are RETAIL API PRICES applied to your token counts (e.g. Opus 4.7: $15/M input, $1.50/M cache read, $75/M output). If you're on a Claude / ChatGPT subscription (Max, Pro, Team), you pay the flat monthly fee instead — your actual bill is unrelated to these numbers. Use $ here as 'shadow API value', not 'money you spent'.",
     "blockSpendByClient": "Spend by <em>client</em>, daily",

@@ -1,5 +1,16 @@
 # Changelog
 
+
+## [0.1.4.0] - 2026-05-17
+
+### Changed
+
+- **All $ now visibly labelled "at retail API rates / 按官方 API 计价"** so no one mistakes shadow-API-value for actual subscription bill.
+  - Big H1 headline on Overview + Budget gets a bordered tag underneath.
+  - Head-stat eyebrows ("Daily average", "Models touched", "Active clients", "Projects touched", "In range") suffixed with "· API".
+  - KPI "SPEND · API" label same treatment.
+- Triggered by comparing with vibeusage's $327 vs our $940 on identical token data — the gap is purely pricing-table (their OpenRouter live sync vs our Anthropic public Opus 4 rates) and we want users to know which rate they're seeing.
+
 All notable changes to this project documented here. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [0.1.3.0] - 2026-05-17
